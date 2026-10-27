@@ -32,6 +32,8 @@ rootProject.name = 'module-ballerinax-slack.trigger'
 include ':slack.trigger-ballerina'
 
 project(':slack.trigger-ballerina').projectDir = file("ballerina")
+include ':slack.trigger-compiler-plugin'
+project(':slack.trigger-compiler-plugin').projectDir = file("compiler-plugin")
 
 develocity {
     buildScan {

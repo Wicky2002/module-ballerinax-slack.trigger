@@ -12,7 +12,7 @@ Create a Slack app, copy its signing secret, and point its Event Subscriptions R
 
 ## Running an example
 
-Execute the following commands to build an example from the source:
+Execute the following commands from an example's directory (for example `cd app-mention-alert`) to build it from the source:
 
 * To build an example:
 

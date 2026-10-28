@@ -88,9 +88,3 @@ The rest come with new service types: `AgentService`, `AssistantService`, `CallS
   `contextEnterpriseId`.
 - The listener acknowledges a delivery before it runs your handler, so a slow or failing handler no
   longer makes Slack retry. Handler errors are logged.
-
-## Test suite
-
-`ballerina/tests` sends each of the 84 events, using the example from the event's page on
-docs.slack.dev, as a signed request to a test listener and checks the right remote function runs.
-`bal test`: 85/85 passing (84 events plus the `url_verification` handshake).

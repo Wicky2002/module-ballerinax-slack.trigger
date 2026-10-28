@@ -17,6 +17,15 @@ This module receives Slack's event deliveries directly - it does not call Slack'
 behalf. Use the [`ballerinax/slack`](https://central.ballerina.io/ballerinax/slack/latest)
 connector for that, for example to reply to a message.
 
+### Key features
+
+- Receives 84 Slack Events API events across 27 service types, including messages, mentions, reactions and channel changes
+- Verifies every request with the app's signing secret (`X-Slack-Signature`) and rejects requests older than five minutes
+- Answers Slack's `url_verification` challenge itself, so the Request URL verifies without any code
+- Acknowledges each delivery before running your handler, so a slow or failing handler doesn't cause retries
+- Services can be attached on their own path, so several triggers and HTTP services can share one port
+- Trigger services are listed by `bal build --export-endpoints` (Ballerina 2201.13.6 or later)
+
 ## Setup guide
 
 Before using this trigger in your Ballerina application, you need a Slack workspace where you can

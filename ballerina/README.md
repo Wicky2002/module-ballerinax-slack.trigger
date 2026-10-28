@@ -124,8 +124,7 @@ listener slack:Listener slackListener = new (userInput, 8090);
 ```
 
 `webhookSecret` should always be set to your Slack app's signing secret - this is what the trigger
-uses to verify incoming requests actually came from Slack. Omitting it disables that verification,
-so it isn't shown here as a normal setup option.
+uses to verify incoming requests actually came from Slack. Without it, the listener rejects every request with `401 Unauthorized`.
 
 If you don't provide a port it will use the default port, which is 8090 - `webhookSecret` should
 still always be set.

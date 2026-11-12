@@ -13,3 +13,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 34 Events API events that `trigger.slack` lacked, such as `app_home_opened`, `channel_shared`, `function_executed`, `message_metadata_*`, `shared_channel_invite_*` and `user_status_changed`.
 - Services on the trigger listener are listed by `bal build --export-endpoints`, through a compiler plugin packaged with the trigger. Endpoint export needs Ballerina 2201.13.6 or later.
 - Trigger metadata and icons under `metadata/` for low-code tooling.
+- The listener a trigger creates from a port caps request bodies at 25 MB, as each body is read before its signature is checked.

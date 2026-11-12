@@ -33,7 +33,7 @@ dependencies = [
 [[package]]
 org = "ballerina"
 name = "constraint"
-version = "1.7.2"
+version = "1.7.3"
 dependencies = [
 	{org = "ballerina", name = "jballerina.java"}
 ]
@@ -361,4 +361,10 @@ dependencies = [
 modules = [
 	{org = "ballerinax", packageName = "slack.trigger", moduleName = "slack.trigger"}
 ]
+
+[[tool]]
+id = "asyncapi"
+org = "ballerina"
+name = "tool.asyncapi"
+version = "0.13.3"
 

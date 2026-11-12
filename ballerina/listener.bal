@@ -27,7 +27,7 @@ public class Listener {
         if listenOn is http:Listener {
             self.httpListener = listenOn;
         } else {
-            self.httpListener = check new (listenOn);
+            self.httpListener = check new (listenOn, requestLimits = {maxEntityBodySize: 26214400});
         }
         self.listenerConfig = listenerConfig;
     }
@@ -60,12 +60,9 @@ public class Listener {
             }
             string path = self.attachments[i][0];
             DispatcherService dispatcher = self.dispatchers.get(path);
-            check dispatcher.removeServiceRef(serviceTypeStr);
-            _ = self.attachments.remove(i);
-            detached = true;
             boolean pathInUse = false;
-            foreach [string, GenericServiceType] attachment in self.attachments {
-                if attachment[0] == path {
+            foreach int j in 0 ..< self.attachments.length() {
+                if j != i && self.attachments[j][0] == path {
                     pathInUse = true;
                 }
             }
@@ -73,6 +70,9 @@ public class Listener {
                 check self.httpListener.detach(dispatcher);
                 _ = self.dispatchers.remove(path);
             }
+            check dispatcher.removeServiceRef(serviceTypeStr);
+            _ = self.attachments.remove(i);
+            detached = true;
         }
         if !detached {
             return error(string `Cannot detach the service of type ${serviceTypeStr}. Service has not been attached to the listener before`);
@@ -92,92 +92,95 @@ public class Listener {
     }
 
     private isolated function getServiceTypeStr(GenericServiceType serviceRef) returns string|error {
-        match serviceRef {
-            var v if v is AppService => {
-                return "AppService";
-            }
-            var v if v is ChannelService => {
-                return "ChannelService";
-            }
-            var v if v is DndService => {
-                return "DndService";
-            }
-            var v if v is EmailDomainChangedService => {
-                return "EmailDomainChangedService";
-            }
-            var v if v is EmojiChangedService => {
-                return "EmojiChangedService";
-            }
-            var v if v is FileService => {
-                return "FileService";
-            }
-            var v if v is GridMigrationService => {
-                return "GridMigrationService";
-            }
-            var v if v is GroupService => {
-                return "GroupService";
-            }
-            var v if v is ImService => {
-                return "ImService";
-            }
-            var v if v is LinkSharedService => {
-                return "LinkSharedService";
-            }
-            var v if v is MemberService => {
-                return "MemberService";
-            }
-            var v if v is MessageService => {
-                return "MessageService";
-            }
-            var v if v is PinService => {
-                return "PinService";
-            }
-            var v if v is ReactionService => {
-                return "ReactionService";
-            }
-            var v if v is StarService => {
-                return "StarService";
-            }
-            var v if v is SubteamService => {
-                return "SubteamService";
-            }
-            var v if v is TeamService => {
-                return "TeamService";
-            }
-            var v if v is TokensRevokedService => {
-                return "TokensRevokedService";
-            }
-            var v if v is UserChangeService => {
-                return "UserChangeService";
-            }
-            var v if v is AssistantService => {
-                return "AssistantService";
-            }
-            var v if v is CallService => {
-                return "CallService";
-            }
-            var v if v is EntityService => {
-                return "EntityService";
-            }
-            var v if v is FunctionService => {
-                return "FunctionService";
-            }
-            var v if v is InviteService => {
-                return "InviteService";
-            }
-            var v if v is SharedChannelService => {
-                return "SharedChannelService";
-            }
-            var v if v is UserService => {
-                return "UserService";
-            }
-            var v if v is AgentService => {
-                return "AgentService";
-            }
-            var _ => {
-                return error("Unrecognized service type attached to the listener");
-            }
+        string[] matched = [];
+        if serviceRef is AppService {
+            matched.push("AppService");
         }
+        if serviceRef is ChannelService {
+            matched.push("ChannelService");
+        }
+        if serviceRef is DndService {
+            matched.push("DndService");
+        }
+        if serviceRef is EmailDomainChangedService {
+            matched.push("EmailDomainChangedService");
+        }
+        if serviceRef is EmojiChangedService {
+            matched.push("EmojiChangedService");
+        }
+        if serviceRef is FileService {
+            matched.push("FileService");
+        }
+        if serviceRef is GridMigrationService {
+            matched.push("GridMigrationService");
+        }
+        if serviceRef is GroupService {
+            matched.push("GroupService");
+        }
+        if serviceRef is ImService {
+            matched.push("ImService");
+        }
+        if serviceRef is LinkSharedService {
+            matched.push("LinkSharedService");
+        }
+        if serviceRef is MemberService {
+            matched.push("MemberService");
+        }
+        if serviceRef is MessageService {
+            matched.push("MessageService");
+        }
+        if serviceRef is PinService {
+            matched.push("PinService");
+        }
+        if serviceRef is ReactionService {
+            matched.push("ReactionService");
+        }
+        if serviceRef is StarService {
+            matched.push("StarService");
+        }
+        if serviceRef is SubteamService {
+            matched.push("SubteamService");
+        }
+        if serviceRef is TeamService {
+            matched.push("TeamService");
+        }
+        if serviceRef is TokensRevokedService {
+            matched.push("TokensRevokedService");
+        }
+        if serviceRef is UserChangeService {
+            matched.push("UserChangeService");
+        }
+        if serviceRef is AssistantService {
+            matched.push("AssistantService");
+        }
+        if serviceRef is CallService {
+            matched.push("CallService");
+        }
+        if serviceRef is EntityService {
+            matched.push("EntityService");
+        }
+        if serviceRef is FunctionService {
+            matched.push("FunctionService");
+        }
+        if serviceRef is InviteService {
+            matched.push("InviteService");
+        }
+        if serviceRef is SharedChannelService {
+            matched.push("SharedChannelService");
+        }
+        if serviceRef is UserService {
+            matched.push("UserService");
+        }
+        if serviceRef is AgentService {
+            matched.push("AgentService");
+        }
+        if matched.length() == 1 {
+            return matched[0];
+        }
+        if matched.length() == 0 {
+            return error("Unrecognized service type attached to the listener");
+        }
+        return error(string `The service matches more than one service type (${string:'join(", ", ...matched)}). Implement one service type per service`);
     }
 
     private isolated function pathKey(string[]|string? attachPoint) returns string {

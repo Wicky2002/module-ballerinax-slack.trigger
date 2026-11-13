@@ -362,9 +362,3 @@ modules = [
 	{org = "ballerinax", packageName = "slack.trigger", moduleName = "slack.trigger"}
 ]
 
-[[tool]]
-id = "asyncapi"
-org = "ballerina"
-name = "tool.asyncapi"
-version = "0.13.3"
-

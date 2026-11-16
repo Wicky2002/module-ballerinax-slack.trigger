@@ -1,0 +1,1780 @@
+asyncapi: 3.0.0
+x-ballerina-event-identifier:
+  type: body
+  path: event.type
+# Slack signs `v0:<X-Slack-Request-Timestamp>:<body>` with HMAC-SHA256 keyed by the app's Signing Secret, sends it
+# as `X-Slack-Signature: v0=<hex>`, and recommends rejecting requests more than five minutes old.
+x-ballerina-auth:
+  header: X-Slack-Signature
+  signature:
+    algorithm: sha256
+    encoding: hex
+    headerFormat: "v0=$signature"
+    input: "'v0' . ':' . $header('X-Slack-Request-Timestamp') . ':' . $body"
+  freshness:
+    header: X-Slack-Request-Timestamp
+    toleranceMillis: 300000
+    unit: seconds
+info:
+  contact:
+    email: developers@slack.com
+    name: Slack Platform Support
+    url: https://api.slack.com/support
+  description: A webhook-based events bus using a subscription model for Slack apps
+  termsOfService: https://slack.com/terms-of-service/api
+  title: Slack Events API
+  version: 1.0.0
+  externalDocs:
+    description: Slack Events API documentation
+    url: https://docs.slack.dev/apis/events-api/
+defaultContentType: application/json
+channels:
+  app:
+    address: app
+    messages:
+      appAppMention:
+        x-ballerina-event-type: app_mention
+        externalDocs:
+          description: Event documentation for app_mention
+          url: https://docs.slack.dev/reference/events/app_mention
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: Subscribe to only the message events that mention your app or bot
+        tags:
+          - name: allows_user_tokens
+          - name: app_event
+        x-scopes-required: []
+        x-tokens-allowed:
+          - user
+      appAppUninstalled:
+        x-ballerina-event-type: app_uninstalled
+        externalDocs:
+          description: Event documentation for app_uninstalled
+          url: https://docs.slack.dev/reference/events/app_uninstalled
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: Your Slack app was uninstalled.
+        tags:
+          - name: allows_user_tokens
+          - name: app_event
+          - name: allows_workspace_tokens
+        x-scopes-required: []
+        x-tokens-allowed:
+          - user
+          - workspace
+      appAppContextChanged:
+        x-ballerina-event-type: app_context_changed
+        externalDocs:
+          description: Event documentation for app_context_changed
+          url: https://docs.slack.dev/reference/events/app_context_changed
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: The context a user is viewing changed while your assistant app was visible
+      appAppDeleted:
+        x-ballerina-event-type: app_deleted
+        externalDocs:
+          description: Event documentation for app_deleted
+          url: https://docs.slack.dev/reference/events/app_deleted
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: An app was deleted from an organization
+      appAppHomeOpened:
+        x-ballerina-event-type: app_home_opened
+        externalDocs:
+          description: Event documentation for app_home_opened
+          url: https://docs.slack.dev/reference/events/app_home_opened
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: A user opened your app home
+      appAppInstalled:
+        x-ballerina-event-type: app_installed
+        externalDocs:
+          description: Event documentation for app_installed
+          url: https://docs.slack.dev/reference/events/app_installed
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: An app was installed in a workspace of an organization
+      appAppRequested:
+        x-ballerina-event-type: app_requested
+        externalDocs:
+          description: Event documentation for app_requested
+          url: https://docs.slack.dev/reference/events/app_requested
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: A user requested approval of an app
+      appAppUninstalledTeam:
+        x-ballerina-event-type: app_uninstalled_team
+        externalDocs:
+          description: Event documentation for app_uninstalled_team
+          url: https://docs.slack.dev/reference/events/app_uninstalled_team
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: An app was uninstalled from a workspace of an organization
+    bindings:
+      http:
+        method: POST
+  channel:
+    address: channel
+    messages:
+      channelChannelArchive:
+        x-ballerina-event-type: channel_archive
+        externalDocs:
+          description: Event documentation for channel_archive
+          url: https://docs.slack.dev/reference/events/channel_archive
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: A channel was archived
+        tags:
+          - name: allows_user_tokens
+          - name: allows_workspace_tokens
+        x-scopes-required:
+          - channels:read
+        x-tokens-allowed:
+          - user
+          - workspace
+      channelChannelCreated:
+        x-ballerina-event-type: channel_created
+        externalDocs: null
+        description: Event documentation for channel_created
+        url: https://docs.slack.dev/reference/events/channel_created
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: A channel was created
+        tags:
+          - name: allows_user_tokens
+          - name: allows_workspace_tokens
+        x-scopes-required:
+          - channels:read
+        x-tokens-allowed:
+          - user
+          - workspace
+      channelChannelDeleted:
+        x-ballerina-event-type: channel_deleted
+        externalDocs: null
+        description: Event documentation for channel_deleted
+        url: https://docs.slack.dev/reference/events/channel_deleted
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: A channel was deleted
+        tags:
+          - name: allows_user_tokens
+          - name: allows_workspace_tokens
+        x-scopes-required:
+          - channels:read
+        x-tokens-allowed:
+          - user
+          - workspace
+      channelChannelHistoryChanged:
+        x-ballerina-event-type: channel_history_changed
+        externalDocs: null
+        description: Event documentation for channel_history_changed
+        url: https://docs.slack.dev/reference/events/channel_history_changed
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: Bulk updates were made to a channel's history
+        tags:
+          - name: allows_user_tokens
+        x-scopes-required:
+          - channels:history
+          - groups:history
+          - mpim:history
+        x-tokens-allowed:
+          - user
+      channelChannelLeft:
+        x-ballerina-event-type: channel_left
+        externalDocs: null
+        description: Event documentation for channel_left
+        url: https://docs.slack.dev/reference/events/channel_left
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: You left a channel
+        tags:
+          - name: allows_user_tokens
+          - name: allows_workspace_tokens
+        x-scopes-required:
+          - channels:read
+        x-tokens-allowed:
+          - user
+          - workspace
+      channelChannelRename:
+        x-ballerina-event-type: channel_rename
+        externalDocs: null
+        description: Event documentation for channel_rename
+        url: https://docs.slack.dev/reference/events/channel_rename
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: A channel was renamed
+        tags:
+          - name: allows_user_tokens
+          - name: allows_workspace_tokens
+        x-scopes-required:
+          - channels:read
+        x-tokens-allowed:
+          - user
+          - workspace
+      channelChannelIdChanged:
+        x-ballerina-event-type: channel_id_changed
+        externalDocs:
+          description: Event documentation for channel_id_changed
+          url: https://docs.slack.dev/reference/events/channel_id_changed
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: A channel ID changed
+      channelChannelShared:
+        x-ballerina-event-type: channel_shared
+        externalDocs:
+          description: Event documentation for channel_shared
+          url: https://docs.slack.dev/reference/events/channel_shared
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: A channel was shared with an external workspace
+      channelChannelUnshared:
+        x-ballerina-event-type: channel_unshared
+        externalDocs:
+          description: Event documentation for channel_unshared
+          url: https://docs.slack.dev/reference/events/channel_unshared
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: An external workspace was removed from a shared channel
+    bindings:
+      http:
+        method: POST
+  dnd:
+    address: dnd
+    messages:
+      dndDndUpdated:
+        x-ballerina-event-type: dnd_updated
+        externalDocs:
+          description: Event documentation for dnd_updated
+          url: https://docs.slack.dev/reference/events/dnd_updated
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: Do not Disturb settings changed for the current user
+        tags:
+          - name: allows_user_tokens
+        x-scopes-required:
+          - dnd:read
+        x-tokens-allowed:
+          - user
+      dndDndUpdatedUser:
+        x-ballerina-event-type: dnd_updated_user
+        externalDocs:
+          description: Event documentation for dnd_updated_user
+          url: https://docs.slack.dev/reference/events/dnd_updated_user
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: Do not Disturb settings changed for a member
+        tags:
+          - name: allows_user_tokens
+        x-scopes-required:
+          - dnd:read
+        x-tokens-allowed:
+          - user
+    bindings:
+      http:
+        method: POST
+  emailDomainChanged:
+    address: email/domain/changed
+    messages:
+      emailDomainChangedEmailDomainChanged:
+        x-ballerina-event-type: email_domain_changed
+        externalDocs:
+          description: Event documentation for email_domain_changed
+          url: https://docs.slack.dev/reference/events/email_domain_changed
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: The workspace email domain has changed
+        tags:
+          - name: allows_user_tokens
+          - name: allows_workspace_tokens
+        x-scopes-required:
+          - team:read
+        x-tokens-allowed:
+          - user
+          - workspace
+    bindings:
+      http:
+        method: POST
+  emojiChanged:
+    address: emoji/changed
+    messages:
+      emojiChangedEmojiChanged:
+        x-ballerina-event-type: emoji_changed
+        externalDocs:
+          description: Event documentation for emoji_changed
+          url: https://docs.slack.dev/reference/events/emoji_changed
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: A custom emoji has been added or changed
+        tags:
+          - name: allows_user_tokens
+          - name: allows_workspace_tokens
+        x-scopes-required:
+          - emoji:read
+        x-tokens-allowed:
+          - user
+          - workspace
+    bindings:
+      http:
+        method: POST
+  file:
+    address: file
+    messages:
+      fileFileChange:
+        x-ballerina-event-type: file_change
+        externalDocs:
+          description: Event documentation for file_change
+          url: https://docs.slack.dev/reference/events/file_change
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: A file was changed
+        tags:
+          - name: allows_user_tokens
+          - name: allows_workspace_tokens
+        x-scopes-required:
+          - files:read
+        x-tokens-allowed:
+          - user
+          - workspace
+      fileFileCommentDeleted:
+        x-ballerina-event-type: file_comment_deleted
+        externalDocs:
+          description: Event documentation for file_comment_deleted
+          url: https://docs.slack.dev/reference/events/file_comment_deleted
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: A file comment was deleted
+        tags:
+          - name: allows_user_tokens
+          - name: allows_workspace_tokens
+        x-scopes-required:
+          - files:read
+        x-tokens-allowed:
+          - user
+          - workspace
+      fileFileCreated:
+        x-ballerina-event-type: file_created
+        externalDocs:
+          description: Event documentation for file_created
+          url: https://docs.slack.dev/reference/events/file_created
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: A file was created
+        tags:
+          - name: allows_user_tokens
+          - name: allows_workspace_tokens
+        x-scopes-required:
+          - files:read
+        x-tokens-allowed:
+          - user
+          - workspace
+      fileFileDeleted:
+        x-ballerina-event-type: file_deleted
+        externalDocs:
+          description: Event documentation for file_deleted
+          url: https://docs.slack.dev/reference/events/file_deleted
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: A file was deleted
+        tags:
+          - name: allows_user_tokens
+          - name: allows_workspace_tokens
+        x-scopes-required:
+          - files:read
+        x-tokens-allowed:
+          - user
+          - workspace
+      fileFilePublic:
+        x-ballerina-event-type: file_public
+        externalDocs:
+          description: Event documentation for file_public
+          url: https://docs.slack.dev/reference/events/file_public
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: A file was made public
+        tags:
+          - name: allows_user_tokens
+          - name: allows_workspace_tokens
+        x-scopes-required:
+          - files:read
+        x-tokens-allowed:
+          - user
+          - workspace
+      fileFileShared:
+        x-ballerina-event-type: file_shared
+        externalDocs:
+          description: Event documentation for file_shared
+          url: https://docs.slack.dev/reference/events/file_shared
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: A file was shared
+        tags:
+          - name: allows_user_tokens
+          - name: allows_workspace_tokens
+        x-scopes-required:
+          - files:read
+        x-tokens-allowed:
+          - user
+          - workspace
+      fileFileUnshared:
+        x-ballerina-event-type: file_unshared
+        externalDocs:
+          description: Event documentation for file_unshared
+          url: https://docs.slack.dev/reference/events/file_unshared
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: A file was unshared
+        tags:
+          - name: allows_user_tokens
+          - name: allows_workspace_tokens
+        x-scopes-required:
+          - files:read
+        x-tokens-allowed:
+          - user
+          - workspace
+    bindings:
+      http:
+        method: POST
+  gridMigration:
+    address: grid/migration
+    messages:
+      gridMigrationGridMigrationFinished:
+        x-ballerina-event-type: grid_migration_finished
+        externalDocs:
+          description: Event documentation for grid_migration_finished
+          url: https://docs.slack.dev/reference/events/grid_migration_finished
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: An enterprise grid migration has finished on this workspace.
+        tags:
+          - name: allows_user_tokens
+          - name: app_event
+          - name: allows_workspace_tokens
+        x-scopes-required: []
+        x-tokens-allowed:
+          - user
+          - workspace
+      gridMigrationGridMigrationStarted:
+        x-ballerina-event-type: grid_migration_started
+        externalDocs:
+          description: Event documentation for grid_migration_started
+          url: https://docs.slack.dev/reference/events/grid_migration_started
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: An enterprise grid migration has started on this workspace.
+        tags:
+          - name: allows_user_tokens
+          - name: app_event
+          - name: allows_workspace_tokens
+        x-scopes-required: []
+        x-tokens-allowed:
+          - user
+          - workspace
+    bindings:
+      http:
+        method: POST
+  group:
+    address: group
+    messages:
+      groupGroupClose:
+        x-ballerina-event-type: group_close
+        externalDocs:
+          description: Event documentation for group_close
+          url: https://docs.slack.dev/reference/events/group_close
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: You closed a private channel
+        tags:
+          - name: allows_user_tokens
+          - name: allows_workspace_tokens
+        x-scopes-required:
+          - groups:read
+        x-tokens-allowed:
+          - user
+          - workspace
+      groupGroupHistoryChanged:
+        x-ballerina-event-type: group_history_changed
+        externalDocs:
+          description: Event documentation for group_history_changed
+          url: https://docs.slack.dev/reference/events/group_history_changed
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: Bulk updates were made to a private channel's history
+        tags:
+          - name: allows_user_tokens
+        x-scopes-required:
+          - groups:history
+        x-tokens-allowed:
+          - user
+      groupGroupLeft:
+        x-ballerina-event-type: group_left
+        externalDocs:
+          description: Event documentation for group_left
+          url: https://docs.slack.dev/reference/events/group_left
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: You left a private channel
+        tags:
+          - name: allows_user_tokens
+          - name: allows_workspace_tokens
+        x-scopes-required:
+          - groups:read
+        x-tokens-allowed:
+          - user
+          - workspace
+      groupGroupOpen:
+        x-ballerina-event-type: group_open
+        externalDocs:
+          description: Event documentation for group_open
+          url: https://docs.slack.dev/reference/events/group_open
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: You created a group DM
+        tags:
+          - name: allows_user_tokens
+          - name: allows_workspace_tokens
+        x-scopes-required:
+          - groups:read
+        x-tokens-allowed:
+          - user
+          - workspace
+      groupGroupRename:
+        x-ballerina-event-type: group_rename
+        externalDocs:
+          description: Event documentation for group_rename
+          url: https://docs.slack.dev/reference/events/group_rename
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: A private channel was renamed
+        tags:
+          - name: allows_user_tokens
+          - name: allows_workspace_tokens
+        x-scopes-required:
+          - groups:read
+        x-tokens-allowed:
+          - user
+          - workspace
+      groupGroupDeleted:
+        x-ballerina-event-type: group_deleted
+        externalDocs:
+          description: Event documentation for group_deleted
+          url: https://docs.slack.dev/reference/events/group_deleted
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: A private channel was deleted
+    bindings:
+      http:
+        method: POST
+  im:
+    address: im
+    messages:
+      imImClose:
+        x-ballerina-event-type: im_close
+        externalDocs:
+          description: Event documentation for im_close
+          url: https://docs.slack.dev/reference/events/im_close
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: You closed a DM
+        tags:
+          - name: allows_user_tokens
+          - name: allows_workspace_tokens
+        x-scopes-required:
+          - im:read
+        x-tokens-allowed:
+          - user
+          - workspace
+      imImCreated:
+        x-ballerina-event-type: im_created
+        externalDocs:
+          description: Event documentation for im_created
+          url: https://docs.slack.dev/reference/events/im_created
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: A DM was created
+        tags:
+          - name: allows_user_tokens
+          - name: allows_workspace_tokens
+        x-scopes-required:
+          - im:read
+        x-tokens-allowed:
+          - user
+          - workspace
+      imImHistoryChanged:
+        x-ballerina-event-type: im_history_changed
+        externalDocs:
+          description: Event documentation for im_history_changed
+          url: https://docs.slack.dev/reference/events/im_history_changed
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: Bulk updates were made to a DM's history
+        tags:
+          - name: allows_user_tokens
+        x-scopes-required:
+          - im:history
+        x-tokens-allowed:
+          - user
+      imImOpen:
+        x-ballerina-event-type: im_open
+        externalDocs:
+          description: Event documentation for im_open
+          url: https://docs.slack.dev/reference/events/im_open
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: You opened a DM
+        tags:
+          - name: allows_user_tokens
+          - name: allows_workspace_tokens
+        x-scopes-required:
+          - im:read
+        x-tokens-allowed:
+          - user
+          - workspace
+    bindings:
+      http:
+        method: POST
+  linkShared:
+    address: link/shared
+    messages:
+      linkSharedLinkShared:
+        x-ballerina-event-type: link_shared
+        externalDocs:
+          description: Event documentation for link_shared
+          url: https://docs.slack.dev/reference/events/link_shared
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: A message was posted containing one or more links relevant to your application
+        tags:
+          - name: allows_user_tokens
+          - name: allows_workspace_tokens
+        x-scopes-required:
+          - links:read
+        x-tokens-allowed:
+          - user
+          - workspace
+    bindings:
+      http:
+        method: POST
+  member:
+    address: member
+    messages:
+      memberMemberJoinedChannel:
+        x-ballerina-event-type: member_joined_channel
+        externalDocs:
+          description: Event documentation for member_joined_channel
+          url: https://docs.slack.dev/reference/events/member_joined_channel
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: A user joined a public or private channel
+        tags:
+          - name: allows_user_tokens
+          - name: allows_workspace_tokens
+        x-scopes-required:
+          - channels:read
+          - groups:read
+        x-tokens-allowed:
+          - user
+          - workspace
+      memberMemberLeftChannel:
+        x-ballerina-event-type: member_left_channel
+        externalDocs:
+          description: Event documentation for member_left_channel
+          url: https://docs.slack.dev/reference/events/member_left_channel
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: A user left a public or private channel
+        tags:
+          - name: allows_user_tokens
+          - name: allows_workspace_tokens
+        x-scopes-required:
+          - channels:read
+          - groups:read
+        x-tokens-allowed:
+          - user
+          - workspace
+    bindings:
+      http:
+        method: POST
+  message:
+    address: message
+    messages:
+      messageMessage:
+        x-ballerina-event-type: message
+        externalDocs:
+          description: Event documentation for message
+          url: https://docs.slack.dev/reference/events/message
+        payload:
+          $ref: '#/components/schemas/MessageEventWrapper'
+        summary: A message was posted; one handler for every message subscription (channels, groups, im, mpim, app_home), told apart by event.channel_type
+        tags:
+          - name: allows_user_tokens
+          - name: allows_workspace_tokens
+        x-scopes-required:
+          - channels:history
+          - groups:history
+          - im:history
+          - mpim:history
+        x-tokens-allowed:
+          - user
+          - workspace
+      messageMessageMetadataDeleted:
+        x-ballerina-event-type: message_metadata_deleted
+        externalDocs:
+          description: Event documentation for message_metadata_deleted
+          url: https://docs.slack.dev/reference/events/message_metadata_deleted
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: A message containing metadata was deleted
+      messageMessageMetadataPosted:
+        x-ballerina-event-type: message_metadata_posted
+        externalDocs:
+          description: Event documentation for message_metadata_posted
+          url: https://docs.slack.dev/reference/events/message_metadata_posted
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: A message containing metadata was posted
+      messageMessageMetadataUpdated:
+        x-ballerina-event-type: message_metadata_updated
+        externalDocs:
+          description: Event documentation for message_metadata_updated
+          url: https://docs.slack.dev/reference/events/message_metadata_updated
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: A message containing metadata was updated
+    bindings:
+      http:
+        method: POST
+  pin:
+    address: pin
+    messages:
+      pinPinAdded:
+        x-ballerina-event-type: pin_added
+        externalDocs:
+          description: Event documentation for pin_added
+          url: https://docs.slack.dev/reference/events/pin_added
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: A pin was added to a channel
+        tags:
+          - name: allows_user_tokens
+          - name: allows_workspace_tokens
+        x-scopes-required:
+          - pins:read
+        x-tokens-allowed:
+          - user
+          - workspace
+      pinPinRemoved:
+        x-ballerina-event-type: pin_removed
+        externalDocs:
+          description: Event documentation for pin_removed
+          url: https://docs.slack.dev/reference/events/pin_removed
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: A pin was removed from a channel
+        tags:
+          - name: allows_user_tokens
+          - name: allows_workspace_tokens
+        x-scopes-required:
+          - pins:read
+        x-tokens-allowed:
+          - user
+          - workspace
+    bindings:
+      http:
+        method: POST
+  reaction:
+    address: reaction
+    messages:
+      reactionReactionAdded:
+        x-ballerina-event-type: reaction_added
+        externalDocs:
+          description: Event documentation for reaction_added
+          url: https://docs.slack.dev/reference/events/reaction_added
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: A member has added an emoji reaction to an item
+        tags:
+          - name: allows_user_tokens
+          - name: allows_workspace_tokens
+        x-scopes-required:
+          - reactions:read
+        x-tokens-allowed:
+          - user
+          - workspace
+      reactionReactionRemoved:
+        x-ballerina-event-type: reaction_removed
+        externalDocs:
+          description: Event documentation for reaction_removed
+          url: https://docs.slack.dev/reference/events/reaction_removed
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: A member removed an emoji reaction
+        tags:
+          - name: allows_user_tokens
+          - name: allows_workspace_tokens
+        x-scopes-required:
+          - reactions:read
+        x-tokens-allowed:
+          - user
+          - workspace
+    bindings:
+      http:
+        method: POST
+  star:
+    address: star
+    messages:
+      starStarAdded:
+        x-ballerina-event-type: star_added
+        externalDocs:
+          description: Event documentation for star_added
+          url: https://docs.slack.dev/reference/events/star_added
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: A member has starred an item
+        tags:
+          - name: allows_user_tokens
+        x-scopes-required:
+          - stars:read
+        x-tokens-allowed:
+          - user
+      starStarRemoved:
+        x-ballerina-event-type: star_removed
+        externalDocs:
+          description: Event documentation for star_removed
+          url: https://docs.slack.dev/reference/events/star_removed
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: A member removed a star
+        tags:
+          - name: allows_user_tokens
+        x-scopes-required:
+          - stars:read
+        x-tokens-allowed:
+          - user
+    bindings:
+      http:
+        method: POST
+  subteam:
+    address: subteam
+    messages:
+      subteamSubteamCreated:
+        x-ballerina-event-type: subteam_created
+        externalDocs:
+          description: Event documentation for subteam_created
+          url: https://docs.slack.dev/reference/events/subteam_created
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: A User Group has been added to the workspace
+        tags:
+          - name: allows_user_tokens
+          - name: allows_workspace_tokens
+        x-scopes-required:
+          - usergroups:read
+        x-tokens-allowed:
+          - user
+          - workspace
+      subteamSubteamMembersChanged:
+        x-ballerina-event-type: subteam_members_changed
+        externalDocs:
+          description: Event documentation for subteam_members_changed
+          url: https://docs.slack.dev/reference/events/subteam_members_changed
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: The membership of an existing User Group has changed
+        tags:
+          - name: allows_user_tokens
+          - name: allows_workspace_tokens
+        x-scopes-required:
+          - usergroups:read
+        x-tokens-allowed:
+          - user
+          - workspace
+      subteamSubteamSelfAdded:
+        x-ballerina-event-type: subteam_self_added
+        externalDocs:
+          description: Event documentation for subteam_self_added
+          url: https://docs.slack.dev/reference/events/subteam_self_added
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: You have been added to a User Group
+        tags:
+          - name: allows_user_tokens
+        x-scopes-required:
+          - usergroups:read
+        x-tokens-allowed:
+          - user
+      subteamSubteamSelfRemoved:
+        x-ballerina-event-type: subteam_self_removed
+        externalDocs:
+          description: Event documentation for subteam_self_removed
+          url: https://docs.slack.dev/reference/events/subteam_self_removed
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: You have been removed from a User Group
+        tags:
+          - name: allows_user_tokens
+        x-scopes-required:
+          - usergroups:read
+        x-tokens-allowed:
+          - user
+      subteamSubteamUpdated:
+        x-ballerina-event-type: subteam_updated
+        externalDocs:
+          description: Event documentation for subteam_updated
+          url: https://docs.slack.dev/reference/events/subteam_updated
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: An existing User Group has been updated or its members changed
+        tags:
+          - name: allows_user_tokens
+          - name: allows_workspace_tokens
+        x-scopes-required:
+          - usergroups:read
+        x-tokens-allowed:
+          - user
+          - workspace
+    bindings:
+      http:
+        method: POST
+  team:
+    address: team
+    messages:
+      teamTeamDomainChange:
+        x-ballerina-event-type: team_domain_change
+        externalDocs:
+          description: Event documentation for team_domain_change
+          url: https://docs.slack.dev/reference/events/team_domain_change
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: The workspace domain has changed
+        tags:
+          - name: allows_user_tokens
+          - name: allows_workspace_tokens
+        x-scopes-required:
+          - team:read
+        x-tokens-allowed:
+          - user
+          - workspace
+      teamTeamJoin:
+        x-ballerina-event-type: team_join
+        externalDocs:
+          description: Event documentation for team_join
+          url: https://docs.slack.dev/reference/events/team_join
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: A new member has joined
+        tags:
+          - name: allows_user_tokens
+          - name: allows_workspace_tokens
+        x-scopes-required:
+          - users:read
+        x-tokens-allowed:
+          - user
+          - workspace
+      teamTeamRename:
+        x-ballerina-event-type: team_rename
+        externalDocs:
+          description: Event documentation for team_rename
+          url: https://docs.slack.dev/reference/events/team_rename
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: The workspace name has changed
+        tags:
+          - name: allows_user_tokens
+          - name: allows_workspace_tokens
+        x-scopes-required:
+          - team:read
+        x-tokens-allowed:
+          - user
+          - workspace
+      teamTeamAccessGranted:
+        x-ballerina-event-type: team_access_granted
+        externalDocs:
+          description: Event documentation for team_access_granted
+          url: https://docs.slack.dev/reference/events/team_access_granted
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: Access to a team was granted to an organization-ready app
+      teamTeamAccessRevoked:
+        x-ballerina-event-type: team_access_revoked
+        externalDocs:
+          description: Event documentation for team_access_revoked
+          url: https://docs.slack.dev/reference/events/team_access_revoked
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: Access to a team was revoked for an organization-ready app
+    bindings:
+      http:
+        method: POST
+  tokensRevoked:
+    address: tokens/revoked
+    messages:
+      tokensRevokedTokensRevoked:
+        x-ballerina-event-type: tokens_revoked
+        externalDocs:
+          description: Event documentation for tokens_revoked
+          url: https://docs.slack.dev/reference/events/tokens_revoked
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: API tokens for your app were revoked.
+        tags:
+          - name: allows_user_tokens
+          - name: app_event
+          - name: allows_workspace_tokens
+        x-scopes-required: []
+        x-tokens-allowed:
+          - user
+          - workspace
+    bindings:
+      http:
+        method: POST
+  urlVerification:
+    address: url/verification
+    description: >-
+      The request Slack sends to the Request URL when it is saved in Event Subscriptions. The listener answers it by
+      echoing `challenge`.
+    messages:
+      urlVerification:
+        externalDocs:
+          description: Event documentation for url_verification
+          url: https://docs.slack.dev/reference/events/url_verification
+        summary: Verifies ownership of an Events API Request URL
+        payload:
+          type: object
+          required:
+            - type
+            - challenge
+          properties:
+            token:
+              type: string
+              description: Deprecated verification token.
+            challenge:
+              type: string
+              description: A random string the endpoint must return.
+            type:
+              type: string
+              const: url_verification
+        correlationId:
+          location: $message.payload#/challenge
+      urlVerificationReply:
+        summary: The `challenge` value, returned as plain text.
+        payload:
+          type: string
+        bindings:
+          http:
+            statusCode: 200
+    bindings:
+      http:
+        method: POST
+  userChange:
+    address: user/change
+    messages:
+      userChangeUserChange:
+        x-ballerina-event-type: user_change
+        externalDocs:
+          description: Event documentation for user_change
+          url: https://docs.slack.dev/reference/events/user_change
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: A member's data has changed
+        tags:
+          - name: allows_user_tokens
+          - name: allows_workspace_tokens
+        x-scopes-required:
+          - users:read
+        x-tokens-allowed:
+          - user
+          - workspace
+    bindings:
+      http:
+        method: POST
+  assistant:
+    address: assistant
+    messages:
+      assistantAssistantThreadContextChanged:
+        x-ballerina-event-type: assistant_thread_context_changed
+        externalDocs:
+          description: Event documentation for assistant_thread_context_changed
+          url: https://docs.slack.dev/reference/events/assistant_thread_context_changed
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: The context of an assistant thread changed
+      assistantAssistantThreadStarted:
+        x-ballerina-event-type: assistant_thread_started
+        externalDocs:
+          description: Event documentation for assistant_thread_started
+          url: https://docs.slack.dev/reference/events/assistant_thread_started
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: An assistant thread was started
+    bindings:
+      http:
+        method: POST
+  call:
+    address: call
+    messages:
+      callCallRejected:
+        x-ballerina-event-type: call_rejected
+        externalDocs:
+          description: Event documentation for call_rejected
+          url: https://docs.slack.dev/reference/events/call_rejected
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: A call was rejected
+    bindings:
+      http:
+        method: POST
+  entity:
+    address: entity
+    messages:
+      entityEntityCommentsRequested:
+        x-ballerina-event-type: entity_comments_requested
+        externalDocs:
+          description: Event documentation for entity_comments_requested
+          url: https://docs.slack.dev/reference/events/entity_comments_requested
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: Comments for an entity were requested
+      entityEntityDetailsRequested:
+        x-ballerina-event-type: entity_details_requested
+        externalDocs:
+          description: Event documentation for entity_details_requested
+          url: https://docs.slack.dev/reference/events/entity_details_requested
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: Details of an entity were requested
+    bindings:
+      http:
+        method: POST
+  function:
+    address: function
+    messages:
+      functionFunctionExecuted:
+        x-ballerina-event-type: function_executed
+        externalDocs:
+          description: Event documentation for function_executed
+          url: https://docs.slack.dev/reference/events/function_executed
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: A custom workflow function was executed
+    bindings:
+      http:
+        method: POST
+  invite:
+    address: invite
+    messages:
+      inviteInviteRequested:
+        x-ballerina-event-type: invite_requested
+        externalDocs:
+          description: Event documentation for invite_requested
+          url: https://docs.slack.dev/reference/events/invite_requested
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: A user requested to invite someone to the workspace
+    bindings:
+      http:
+        method: POST
+  sharedChannel:
+    address: sharedChannel
+    messages:
+      sharedChannelSharedChannelInviteAccepted:
+        x-ballerina-event-type: shared_channel_invite_accepted
+        externalDocs:
+          description: Event documentation for shared_channel_invite_accepted
+          url: https://docs.slack.dev/reference/events/shared_channel_invite_accepted
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: A shared channel invite was accepted
+      sharedChannelSharedChannelInviteApproved:
+        x-ballerina-event-type: shared_channel_invite_approved
+        externalDocs:
+          description: Event documentation for shared_channel_invite_approved
+          url: https://docs.slack.dev/reference/events/shared_channel_invite_approved
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: A shared channel invite was approved
+      sharedChannelSharedChannelInviteDeclined:
+        x-ballerina-event-type: shared_channel_invite_declined
+        externalDocs:
+          description: Event documentation for shared_channel_invite_declined
+          url: https://docs.slack.dev/reference/events/shared_channel_invite_declined
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: A shared channel invite was declined
+      sharedChannelSharedChannelInviteReceived:
+        x-ballerina-event-type: shared_channel_invite_received
+        externalDocs:
+          description: Event documentation for shared_channel_invite_received
+          url: https://docs.slack.dev/reference/events/shared_channel_invite_received
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: A shared channel invite was received
+      sharedChannelSharedChannelInviteRequested:
+        x-ballerina-event-type: shared_channel_invite_requested
+        externalDocs:
+          description: Event documentation for shared_channel_invite_requested
+          url: https://docs.slack.dev/reference/events/shared_channel_invite_requested
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: A shared channel invite was requested
+    bindings:
+      http:
+        method: POST
+  user:
+    address: user
+    messages:
+      userUserHuddleChanged:
+        x-ballerina-event-type: user_huddle_changed
+        externalDocs:
+          description: Event documentation for user_huddle_changed
+          url: https://docs.slack.dev/reference/events/user_huddle_changed
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: A user joined or left a huddle
+      userUserProfileChanged:
+        x-ballerina-event-type: user_profile_changed
+        externalDocs:
+          description: Event documentation for user_profile_changed
+          url: https://docs.slack.dev/reference/events/user_profile_changed
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: A user profile changed
+      userUserStatusChanged:
+        x-ballerina-event-type: user_status_changed
+        externalDocs:
+          description: Event documentation for user_status_changed
+          url: https://docs.slack.dev/reference/events/user_status_changed
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: A user status changed
+      userUserConnection:
+        x-ballerina-event-type: user_connection
+        externalDocs:
+          description: Event documentation for user_connection
+          url: https://docs.slack.dev/reference/events/user_connection
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: A member's user connection status change requested
+      userUserGuestStatusChanged:
+        x-ballerina-event-type: user_guest_status_changed
+        externalDocs:
+          description: Event documentation for user_guest_status_changed
+          url: https://docs.slack.dev/reference/events/user_guest_status_changed
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: A user's guest status changed
+    bindings:
+      http:
+        method: POST
+  agent:
+    address: agent
+    messages:
+      agentAgentSessionStopped:
+        x-ballerina-event-type: agent_session_stopped
+        externalDocs:
+          description: Event documentation for agent_session_stopped
+          url: https://docs.slack.dev/reference/events/agent_session_stopped
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: A user clicked the stop button on an agent session
+      agentAgentSessionTitleChanged:
+        x-ballerina-event-type: agent_session_title_changed
+        externalDocs:
+          description: Event documentation for agent_session_title_changed
+          url: https://docs.slack.dev/reference/events/agent_session_title_changed
+        payload:
+          $ref: '#/components/schemas/GenericEventWrapper'
+        summary: A user changed the title of an agent session
+    bindings:
+      http:
+        method: POST
+operations:
+  app:
+    action: receive
+    channel:
+      $ref: '#/channels/app'
+    messages:
+      - $ref: '#/channels/app/messages/appAppMention'
+      - $ref: '#/channels/app/messages/appAppUninstalled'
+      - $ref: '#/channels/app/messages/appAppContextChanged'
+      - $ref: '#/channels/app/messages/appAppDeleted'
+      - $ref: '#/channels/app/messages/appAppHomeOpened'
+      - $ref: '#/channels/app/messages/appAppInstalled'
+      - $ref: '#/channels/app/messages/appAppRequested'
+      - $ref: '#/channels/app/messages/appAppUninstalledTeam'
+  channel:
+    action: receive
+    channel:
+      $ref: '#/channels/channel'
+    messages:
+      - $ref: '#/channels/channel/messages/channelChannelArchive'
+      - $ref: '#/channels/channel/messages/channelChannelCreated'
+      - $ref: '#/channels/channel/messages/channelChannelDeleted'
+      - $ref: '#/channels/channel/messages/channelChannelHistoryChanged'
+      - $ref: '#/channels/channel/messages/channelChannelLeft'
+      - $ref: '#/channels/channel/messages/channelChannelRename'
+      - $ref: '#/channels/channel/messages/channelChannelIdChanged'
+      - $ref: '#/channels/channel/messages/channelChannelShared'
+      - $ref: '#/channels/channel/messages/channelChannelUnshared'
+  dnd:
+    action: receive
+    channel:
+      $ref: '#/channels/dnd'
+    messages:
+      - $ref: '#/channels/dnd/messages/dndDndUpdated'
+      - $ref: '#/channels/dnd/messages/dndDndUpdatedUser'
+  emailDomainChanged:
+    action: receive
+    channel:
+      $ref: '#/channels/emailDomainChanged'
+    messages:
+      - $ref: '#/channels/emailDomainChanged/messages/emailDomainChangedEmailDomainChanged'
+  emojiChanged:
+    action: receive
+    channel:
+      $ref: '#/channels/emojiChanged'
+    messages:
+      - $ref: '#/channels/emojiChanged/messages/emojiChangedEmojiChanged'
+  file:
+    action: receive
+    channel:
+      $ref: '#/channels/file'
+    messages:
+      - $ref: '#/channels/file/messages/fileFileChange'
+      - $ref: '#/channels/file/messages/fileFileCommentDeleted'
+      - $ref: '#/channels/file/messages/fileFileCreated'
+      - $ref: '#/channels/file/messages/fileFileDeleted'
+      - $ref: '#/channels/file/messages/fileFilePublic'
+      - $ref: '#/channels/file/messages/fileFileShared'
+      - $ref: '#/channels/file/messages/fileFileUnshared'
+  gridMigration:
+    action: receive
+    channel:
+      $ref: '#/channels/gridMigration'
+    messages:
+      - $ref: '#/channels/gridMigration/messages/gridMigrationGridMigrationFinished'
+      - $ref: '#/channels/gridMigration/messages/gridMigrationGridMigrationStarted'
+  group:
+    action: receive
+    channel:
+      $ref: '#/channels/group'
+    messages:
+      - $ref: '#/channels/group/messages/groupGroupClose'
+      - $ref: '#/channels/group/messages/groupGroupHistoryChanged'
+      - $ref: '#/channels/group/messages/groupGroupLeft'
+      - $ref: '#/channels/group/messages/groupGroupOpen'
+      - $ref: '#/channels/group/messages/groupGroupRename'
+      - $ref: '#/channels/group/messages/groupGroupDeleted'
+  im:
+    action: receive
+    channel:
+      $ref: '#/channels/im'
+    messages:
+      - $ref: '#/channels/im/messages/imImClose'
+      - $ref: '#/channels/im/messages/imImCreated'
+      - $ref: '#/channels/im/messages/imImHistoryChanged'
+      - $ref: '#/channels/im/messages/imImOpen'
+  linkShared:
+    action: receive
+    channel:
+      $ref: '#/channels/linkShared'
+    messages:
+      - $ref: '#/channels/linkShared/messages/linkSharedLinkShared'
+  member:
+    action: receive
+    channel:
+      $ref: '#/channels/member'
+    messages:
+      - $ref: '#/channels/member/messages/memberMemberJoinedChannel'
+      - $ref: '#/channels/member/messages/memberMemberLeftChannel'
+  message:
+    action: receive
+    channel:
+      $ref: '#/channels/message'
+    messages:
+      - $ref: '#/channels/message/messages/messageMessage'
+      - $ref: '#/channels/message/messages/messageMessageMetadataDeleted'
+      - $ref: '#/channels/message/messages/messageMessageMetadataPosted'
+      - $ref: '#/channels/message/messages/messageMessageMetadataUpdated'
+  pin:
+    action: receive
+    channel:
+      $ref: '#/channels/pin'
+    messages:
+      - $ref: '#/channels/pin/messages/pinPinAdded'
+      - $ref: '#/channels/pin/messages/pinPinRemoved'
+  reaction:
+    action: receive
+    channel:
+      $ref: '#/channels/reaction'
+    messages:
+      - $ref: '#/channels/reaction/messages/reactionReactionAdded'
+      - $ref: '#/channels/reaction/messages/reactionReactionRemoved'
+  star:
+    action: receive
+    channel:
+      $ref: '#/channels/star'
+    messages:
+      - $ref: '#/channels/star/messages/starStarAdded'
+      - $ref: '#/channels/star/messages/starStarRemoved'
+  subteam:
+    action: receive
+    channel:
+      $ref: '#/channels/subteam'
+    messages:
+      - $ref: '#/channels/subteam/messages/subteamSubteamCreated'
+      - $ref: '#/channels/subteam/messages/subteamSubteamMembersChanged'
+      - $ref: '#/channels/subteam/messages/subteamSubteamSelfAdded'
+      - $ref: '#/channels/subteam/messages/subteamSubteamSelfRemoved'
+      - $ref: '#/channels/subteam/messages/subteamSubteamUpdated'
+  team:
+    action: receive
+    channel:
+      $ref: '#/channels/team'
+    messages:
+      - $ref: '#/channels/team/messages/teamTeamDomainChange'
+      - $ref: '#/channels/team/messages/teamTeamJoin'
+      - $ref: '#/channels/team/messages/teamTeamRename'
+      - $ref: '#/channels/team/messages/teamTeamAccessGranted'
+      - $ref: '#/channels/team/messages/teamTeamAccessRevoked'
+  tokensRevoked:
+    action: receive
+    channel:
+      $ref: '#/channels/tokensRevoked'
+    messages:
+      - $ref: '#/channels/tokensRevoked/messages/tokensRevokedTokensRevoked'
+  urlVerification:
+    action: receive
+    channel:
+      $ref: '#/channels/urlVerification'
+    messages:
+      - $ref: '#/channels/urlVerification/messages/urlVerification'
+    reply:
+      channel:
+        $ref: '#/channels/urlVerification'
+      messages:
+        - $ref: '#/channels/urlVerification/messages/urlVerificationReply'
+  userChange:
+    action: receive
+    channel:
+      $ref: '#/channels/userChange'
+    messages:
+      - $ref: '#/channels/userChange/messages/userChangeUserChange'
+  assistant:
+    action: receive
+    channel:
+      $ref: '#/channels/assistant'
+    messages:
+      - $ref: '#/channels/assistant/messages/assistantAssistantThreadContextChanged'
+      - $ref: '#/channels/assistant/messages/assistantAssistantThreadStarted'
+  call:
+    action: receive
+    channel:
+      $ref: '#/channels/call'
+    messages:
+      - $ref: '#/channels/call/messages/callCallRejected'
+  entity:
+    action: receive
+    channel:
+      $ref: '#/channels/entity'
+    messages:
+      - $ref: '#/channels/entity/messages/entityEntityCommentsRequested'
+      - $ref: '#/channels/entity/messages/entityEntityDetailsRequested'
+  function:
+    action: receive
+    channel:
+      $ref: '#/channels/function'
+    messages:
+      - $ref: '#/channels/function/messages/functionFunctionExecuted'
+  invite:
+    action: receive
+    channel:
+      $ref: '#/channels/invite'
+    messages:
+      - $ref: '#/channels/invite/messages/inviteInviteRequested'
+  sharedChannel:
+    action: receive
+    channel:
+      $ref: '#/channels/sharedChannel'
+    messages:
+      - $ref: '#/channels/sharedChannel/messages/sharedChannelSharedChannelInviteAccepted'
+      - $ref: '#/channels/sharedChannel/messages/sharedChannelSharedChannelInviteApproved'
+      - $ref: '#/channels/sharedChannel/messages/sharedChannelSharedChannelInviteDeclined'
+      - $ref: '#/channels/sharedChannel/messages/sharedChannelSharedChannelInviteReceived'
+      - $ref: '#/channels/sharedChannel/messages/sharedChannelSharedChannelInviteRequested'
+  user:
+    action: receive
+    channel:
+      $ref: '#/channels/user'
+    messages:
+      - $ref: '#/channels/user/messages/userUserHuddleChanged'
+      - $ref: '#/channels/user/messages/userUserProfileChanged'
+      - $ref: '#/channels/user/messages/userUserStatusChanged'
+      - $ref: '#/channels/user/messages/userUserConnection'
+      - $ref: '#/channels/user/messages/userUserGuestStatusChanged'
+  agent:
+    action: receive
+    channel:
+      $ref: '#/channels/agent'
+    messages:
+      - $ref: '#/channels/agent/messages/agentAgentSessionStopped'
+      - $ref: '#/channels/agent/messages/agentAgentSessionTitleChanged'
+components:
+  schemas:
+    GenericEventWrapper:
+      additionalProperties: true
+      description: >-
+        The wrapper Slack posts every Events API event in. Fields as in the "Callback field overview" of
+        https://docs.slack.dev/apis/events-api/.
+      properties:
+        api_app_id:
+          description: ' Use this to distinguish which app the event belongs to if you use multiple apps with the same Request URL.'
+          title: The unique identifier your installed Slack application.
+          type: string
+          x-examples:
+            - A2H9RFS1A
+        event:
+          additionalProperties: true
+          properties:
+            event_ts:
+              title: When the event was dispatched
+              type: string
+            type:
+              title: The specific name of the event
+              type: string
+            text:
+              title: The message content
+              type: string
+          required:
+            - type
+          title: The actual event, an object, that happened
+          type: object
+          x-examples:
+            - channel: D0PNCRP9N
+              channel_type: app_home
+              event_ts: '1525215129.000001'
+              text: How many cats did we herd yesterday?
+              ts: '1525215129.000001'
+              type: message
+              user: U061F7AUR
+        event_id:
+          title: A unique identifier for this specific event, globally unique across all workspaces.
+          type: string
+          x-examples:
+            - Ev0PV52K25
+        event_time:
+          title: The epoch timestamp in seconds indicating when this event was dispatched.
+          type: integer
+          x-examples:
+            - 1525215129
+        team_id:
+          title: The unique identifier of the workspace where the event occurred
+          type: string
+          x-examples:
+            - T1H9RESGL
+        token:
+          title: A verification token to validate the event originated from Slack
+          description: Deprecated; requests are verified with the signing secret instead.
+          type: string
+        type:
+          title: Indicates which kind of event dispatch this is, usually `event_callback`
+          type: string
+          x-examples:
+            - event_callback
+        authorizations:
+          title: The installation of your app that the event is visible to
+          type: array
+          items:
+            $ref: '#/components/schemas/EventAuthorization'
+        event_context:
+          title: An identifier for this specific event, used with apps.event.authorizations.list
+          type: string
+        is_ext_shared_channel:
+          title: Whether the event happened in a channel shared with another organization
+          type: boolean
+        context_team_id:
+          title: The workspace the event happened in
+          type: string
+        context_enterprise_id:
+          title: The organization the event happened in, or null outside Enterprise Grid
+          type: string
+          nullable: true
+        authed_users:
+          title: Users the event is visible to. Deprecated; Slack sends `authorizations` now
+          type: array
+          items:
+            type: string
+      required:
+        - token
+        - team_id
+        - api_app_id
+        - event
+        - type
+        - event_id
+        - event_time
+      title: Standard event wrapper for the Events API
+      type: object
+      x-examples:
+        - api_app_id: AXXXXXXXXX
+          event:
+            event_ts: '1360782804.083113'
+            item:
+              channel: C0G9QF9GZ
+              ts: '1360782400.498405'
+              type: message
+            item_user: U0G9QF9C6
+            reaction: thumbsup
+            type: reaction_added
+            user: U024BE7LH
+          event_id: EvXXXXXXXX
+          event_time: 1234567890
+          team_id: TXXXXXXXX
+          token: XXYYZZ
+          type: event_callback
+    EventAuthorization:
+      title: An installation of your app that can see the event
+      type: object
+      additionalProperties: true
+      properties:
+        enterprise_id:
+          type: string
+          nullable: true
+          description: The organization the installation belongs to, or null outside Enterprise Grid.
+        team_id:
+          type: string
+          nullable: true
+          description: The workspace the installation belongs to, or null for an organization-wide installation.
+        user_id:
+          type: string
+          description: The user the installation acts as.
+        is_bot:
+          type: boolean
+          description: Whether the installation is a bot user.
+        is_enterprise_install:
+          type: boolean
+          description: Whether the app is installed across the whole Enterprise Grid organization.
+    MessageEventWrapper:
+      additionalProperties: true
+      description: The Events API wrapper around a message event (https://docs.slack.dev/reference/events/message).
+      properties:
+        api_app_id:
+          title: The unique identifier your installed Slack application.
+          type: string
+        event:
+          $ref: '#/components/schemas/MessageEvent'
+        event_id:
+          title: A unique identifier for this specific event, globally unique across all workspaces.
+          type: string
+        event_time:
+          title: The epoch timestamp in seconds indicating when this event was dispatched.
+          type: integer
+        team_id:
+          title: The unique identifier of the workspace where the event occurred
+          type: string
+        token:
+          title: A verification token to validate the event originated from Slack
+          description: Deprecated; requests are verified with the signing secret instead.
+          type: string
+        type:
+          title: Indicates which kind of event dispatch this is, usually `event_callback`
+          type: string
+        authorizations:
+          title: The installation of your app that the event is visible to
+          type: array
+          items:
+            $ref: '#/components/schemas/EventAuthorization'
+        event_context:
+          title: An identifier for this specific event, used with apps.event.authorizations.list
+          type: string
+        is_ext_shared_channel:
+          title: Whether the event happened in a channel shared with another organization
+          type: boolean
+        context_team_id:
+          title: The workspace the event happened in
+          type: string
+        context_enterprise_id:
+          title: The organization the event happened in, or null outside Enterprise Grid
+          type: string
+          nullable: true
+        authed_users:
+          title: Users the event is visible to. Deprecated; Slack sends `authorizations` now
+          type: array
+          items:
+            type: string
+      required:
+        - token
+        - team_id
+        - api_app_id
+        - event
+        - type
+        - event_id
+        - event_time
+      title: Message event wrapper
+      type: object
+    MessageEvent:
+      additionalProperties: true
+      description: >-
+        A message posted to a channel, private channel, DM, group DM or the app's home. `channel_type` tells them
+        apart (`channel`, `group`, `im`, `mpim`, `app_home`), and `subtype` marks special messages such as
+        `message_changed`, `message_deleted` or `bot_message`.
+      properties:
+        type:
+          type: string
+          description: Always `message`.
+        subtype:
+          type: string
+          description: The kind of special message, absent for an ordinary message.
+        channel:
+          type: string
+          description: The ID of the conversation the message was posted in.
+        channel_type:
+          type: string
+          description: The type of conversation, `channel`, `group`, `im`, `mpim` or `app_home`.
+        user:
+          type: string
+          description: The ID of the user who sent the message. Absent for some subtypes.
+        bot_id:
+          type: string
+          description: The ID of the bot that sent the message, for bot messages.
+        text:
+          type: string
+          description: The text of the message.
+        ts:
+          type: string
+          description: The message's unique timestamp within the conversation.
+        thread_ts:
+          type: string
+          description: The timestamp of the thread's parent message, for a message in a thread.
+        event_ts:
+          type: string
+          description: When the event was dispatched.
+        hidden:
+          type: boolean
+          description: Whether the message is hidden from the conversation, as for some subtypes.
+        deleted_ts:
+          type: string
+          description: The timestamp of the deleted message, for `message_deleted`.
+        edited:
+          type: object
+          description: Who edited the message and when, for an edited message.
+          additionalProperties: true
+          properties:
+            user:
+              type: string
+              description: The ID of the user who edited the message.
+            ts:
+              type: string
+              description: When the message was edited.
+        message:
+          type: object
+          description: The message after the change, for `message_changed`.
+          additionalProperties: true
+        previous_message:
+          type: object
+          description: The message before the change, for `message_changed` and `message_deleted`.
+          additionalProperties: true
+      required:
+        - type
+        - channel
+        - ts
+      type: object

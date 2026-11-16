@@ -1,0 +1,369 @@
+{
+  "version": "v1.0",
+  "listeners": [
+    {
+      "id": "$listener",
+      "doc": "Webhook listener that dispatches each inbound Slack webhook event to the concrete service type matching its event family.",
+      "type": {
+        "name": "Listener"
+      },
+      "services": [
+        "$app",
+        "$channel",
+        "$dnd",
+        "$emailDomainChanged",
+        "$emojiChanged",
+        "$file",
+        "$gridMigration",
+        "$group",
+        "$im",
+        "$linkShared",
+        "$member",
+        "$message",
+        "$pin",
+        "$reaction",
+        "$star",
+        "$subteam",
+        "$team",
+        "$tokensRevoked",
+        "$userChange",
+        "$assistant",
+        "$call",
+        "$entity",
+        "$function",
+        "$invite",
+        "$sharedChannel",
+        "$user",
+        "$agent"
+      ],
+      "multipleServicesAllowed": true,
+      "multipleServicesOfSameTypeAllowed": false
+    }
+  ],
+  "serviceTypes": [
+    {
+      "id": "$app",
+      "doc": "Receives Slack app events: mention, uninstalled, context changed, deleted, home opened, installed, requested, and uninstalled team.",
+      "type": {
+        "name": "AppService"
+      },
+      "concrete": true,
+      "multipleListenersAllowed": true,
+      "handlers": {
+        "backedByConcreteType": true
+      }
+    },
+    {
+      "id": "$channel",
+      "doc": "Receives Slack channel events: archive, created, deleted, history changed, left, rename, id changed, shared, and unshared.",
+      "type": {
+        "name": "ChannelService"
+      },
+      "concrete": true,
+      "multipleListenersAllowed": true,
+      "handlers": {
+        "backedByConcreteType": true
+      }
+    },
+    {
+      "id": "$dnd",
+      "doc": "Receives Slack do not disturb events: updated and updated user.",
+      "type": {
+        "name": "DndService"
+      },
+      "concrete": true,
+      "multipleListenersAllowed": true,
+      "handlers": {
+        "backedByConcreteType": true
+      }
+    },
+    {
+      "id": "$emailDomainChanged",
+      "doc": "Receives Slack email domain changed events.",
+      "type": {
+        "name": "EmailDomainChangedService"
+      },
+      "concrete": true,
+      "multipleListenersAllowed": true,
+      "handlers": {
+        "backedByConcreteType": true
+      }
+    },
+    {
+      "id": "$emojiChanged",
+      "doc": "Receives Slack emoji changed events.",
+      "type": {
+        "name": "EmojiChangedService"
+      },
+      "concrete": true,
+      "multipleListenersAllowed": true,
+      "handlers": {
+        "backedByConcreteType": true
+      }
+    },
+    {
+      "id": "$file",
+      "doc": "Receives Slack file events: change, comment deleted, created, deleted, public, shared, and unshared.",
+      "type": {
+        "name": "FileService"
+      },
+      "concrete": true,
+      "multipleListenersAllowed": true,
+      "handlers": {
+        "backedByConcreteType": true
+      }
+    },
+    {
+      "id": "$gridMigration",
+      "doc": "Receives Slack grid migration events: finished and started.",
+      "type": {
+        "name": "GridMigrationService"
+      },
+      "concrete": true,
+      "multipleListenersAllowed": true,
+      "handlers": {
+        "backedByConcreteType": true
+      }
+    },
+    {
+      "id": "$group",
+      "doc": "Receives Slack group events: close, history changed, left, open, rename, and deleted.",
+      "type": {
+        "name": "GroupService"
+      },
+      "concrete": true,
+      "multipleListenersAllowed": true,
+      "handlers": {
+        "backedByConcreteType": true
+      }
+    },
+    {
+      "id": "$im",
+      "doc": "Receives Slack direct message events: close, created, history changed, and open.",
+      "type": {
+        "name": "ImService"
+      },
+      "concrete": true,
+      "multipleListenersAllowed": true,
+      "handlers": {
+        "backedByConcreteType": true
+      }
+    },
+    {
+      "id": "$linkShared",
+      "doc": "Receives Slack link shared events.",
+      "type": {
+        "name": "LinkSharedService"
+      },
+      "concrete": true,
+      "multipleListenersAllowed": true,
+      "handlers": {
+        "backedByConcreteType": true
+      }
+    },
+    {
+      "id": "$member",
+      "doc": "Receives Slack member events: joined channel and left channel.",
+      "type": {
+        "name": "MemberService"
+      },
+      "concrete": true,
+      "multipleListenersAllowed": true,
+      "handlers": {
+        "backedByConcreteType": true
+      }
+    },
+    {
+      "id": "$message",
+      "doc": "Receives Slack message events: message, metadata deleted, metadata posted, and metadata updated.",
+      "type": {
+        "name": "MessageService"
+      },
+      "concrete": true,
+      "multipleListenersAllowed": true,
+      "handlers": {
+        "backedByConcreteType": true
+      }
+    },
+    {
+      "id": "$pin",
+      "doc": "Receives Slack pin events: added and removed.",
+      "type": {
+        "name": "PinService"
+      },
+      "concrete": true,
+      "multipleListenersAllowed": true,
+      "handlers": {
+        "backedByConcreteType": true
+      }
+    },
+    {
+      "id": "$reaction",
+      "doc": "Receives Slack reaction events: added and removed.",
+      "type": {
+        "name": "ReactionService"
+      },
+      "concrete": true,
+      "multipleListenersAllowed": true,
+      "handlers": {
+        "backedByConcreteType": true
+      }
+    },
+    {
+      "id": "$star",
+      "doc": "Receives Slack star events: added and removed.",
+      "type": {
+        "name": "StarService"
+      },
+      "concrete": true,
+      "multipleListenersAllowed": true,
+      "handlers": {
+        "backedByConcreteType": true
+      }
+    },
+    {
+      "id": "$subteam",
+      "doc": "Receives Slack user group events: created, members changed, self added, self removed, and updated.",
+      "type": {
+        "name": "SubteamService"
+      },
+      "concrete": true,
+      "multipleListenersAllowed": true,
+      "handlers": {
+        "backedByConcreteType": true
+      }
+    },
+    {
+      "id": "$team",
+      "doc": "Receives Slack team events: domain change, join, rename, access granted, and access revoked.",
+      "type": {
+        "name": "TeamService"
+      },
+      "concrete": true,
+      "multipleListenersAllowed": true,
+      "handlers": {
+        "backedByConcreteType": true
+      }
+    },
+    {
+      "id": "$tokensRevoked",
+      "doc": "Receives Slack tokens revoked events.",
+      "type": {
+        "name": "TokensRevokedService"
+      },
+      "concrete": true,
+      "multipleListenersAllowed": true,
+      "handlers": {
+        "backedByConcreteType": true
+      }
+    },
+    {
+      "id": "$userChange",
+      "doc": "Receives Slack user change events.",
+      "type": {
+        "name": "UserChangeService"
+      },
+      "concrete": true,
+      "multipleListenersAllowed": true,
+      "handlers": {
+        "backedByConcreteType": true
+      }
+    },
+    {
+      "id": "$assistant",
+      "doc": "Receives Slack assistant events: thread context changed and thread started.",
+      "type": {
+        "name": "AssistantService"
+      },
+      "concrete": true,
+      "multipleListenersAllowed": true,
+      "handlers": {
+        "backedByConcreteType": true
+      }
+    },
+    {
+      "id": "$call",
+      "doc": "Receives Slack call events: rejected.",
+      "type": {
+        "name": "CallService"
+      },
+      "concrete": true,
+      "multipleListenersAllowed": true,
+      "handlers": {
+        "backedByConcreteType": true
+      }
+    },
+    {
+      "id": "$entity",
+      "doc": "Receives Slack entity events: comments requested and details requested.",
+      "type": {
+        "name": "EntityService"
+      },
+      "concrete": true,
+      "multipleListenersAllowed": true,
+      "handlers": {
+        "backedByConcreteType": true
+      }
+    },
+    {
+      "id": "$function",
+      "doc": "Receives Slack function events: executed.",
+      "type": {
+        "name": "FunctionService"
+      },
+      "concrete": true,
+      "multipleListenersAllowed": true,
+      "handlers": {
+        "backedByConcreteType": true
+      }
+    },
+    {
+      "id": "$invite",
+      "doc": "Receives Slack invite events: requested.",
+      "type": {
+        "name": "InviteService"
+      },
+      "concrete": true,
+      "multipleListenersAllowed": true,
+      "handlers": {
+        "backedByConcreteType": true
+      }
+    },
+    {
+      "id": "$sharedChannel",
+      "doc": "Receives Slack shared channel events: invite accepted, invite approved, invite declined, invite received, and invite requested.",
+      "type": {
+        "name": "SharedChannelService"
+      },
+      "concrete": true,
+      "multipleListenersAllowed": true,
+      "handlers": {
+        "backedByConcreteType": true
+      }
+    },
+    {
+      "id": "$user",
+      "doc": "Receives Slack user events: huddle changed, profile changed, status changed, connection, and guest status changed.",
+      "type": {
+        "name": "UserService"
+      },
+      "concrete": true,
+      "multipleListenersAllowed": true,
+      "handlers": {
+        "backedByConcreteType": true
+      }
+    },
+    {
+      "id": "$agent",
+      "doc": "Receives Slack agent events: session stopped and session title changed.",
+      "type": {
+        "name": "AgentService"
+      },
+      "concrete": true,
+      "multipleListenersAllowed": true,
+      "handlers": {
+        "backedByConcreteType": true
+      }
+    }
+  ]
+}

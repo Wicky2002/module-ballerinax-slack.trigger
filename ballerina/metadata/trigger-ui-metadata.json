@@ -1,0 +1,764 @@
+{
+  "version": "v1.0",
+  "metadata": {
+    "kind": "event"
+  },
+  "trigger": {
+    "displayName": "Slack Event Integration",
+    "description": "Create a service to handle webhook events from Slack",
+    "type": "slack"
+  },
+  "initForm": {
+    "fields": [
+      {
+        "target": {
+          "kind": "recordField",
+          "owner": "trigger.initProperties",
+          "path": "serviceType"
+        },
+        "metadata": {
+          "label": "Event Channel",
+          "description": "The type of Slack Events API event to listen for"
+        },
+        "source": {
+          "construct": {
+            "kind": "SERVICE_TYPE_DESCRIPTOR"
+          },
+          "module": {
+            "name": "slack"
+          }
+        },
+        "state": {
+          "enabled": true,
+          "editable": true,
+          "optional": false,
+          "advanced": false
+        },
+        "key": "serviceType",
+        "default": "slack:MessageService"
+      }
+    ]
+  },
+  "listeners": [
+    {
+      "target": "$listener",
+      "form": {
+        "section": {
+          "label": "Listener",
+          "description": "Attach the service to a new or existing Slack webhook listener."
+        },
+        "createNew": {
+          "label": "Create New Listener",
+          "description": "Define a new Slack webhook listener in the project."
+        },
+        "listenerConfig": {
+          "label": "Listener Configurations",
+          "description": "Configure the Slack webhook listener."
+        },
+        "useExisting": {
+          "label": "Use Existing Listener",
+          "description": "Attach to a Slack listener already declared in the project."
+        },
+        "existingListener": {
+          "label": "Listener",
+          "description": "Select an existing listener to attach the service to."
+        },
+        "existingListenerItems": [
+          "slackListener"
+        ],
+        "existingListenerValue": "slackListener"
+      },
+      "formFields": {
+        "listenerVarName": {
+          "key": "listenerVarName",
+          "default": "slackListener",
+          "metadata": {
+            "label": "Listener Name",
+            "description": "Provide a name for the listener being created"
+          },
+          "source": {
+            "construct": {
+              "kind": "LISTENER_VAR_NAME"
+            }
+          },
+          "state": {
+            "enabled": true,
+            "editable": true,
+            "optional": false,
+            "advanced": false
+          }
+        },
+        "listenOn": {
+          "key": "listenOn",
+          "placeholder": "8090",
+          "default": "8090",
+          "metadata": {
+            "label": "Webhook Listener Port",
+            "description": "The port on which the webhook listener accepts incoming HTTP requests"
+          },
+          "source": {
+            "argument": {
+              "kind": "LISTENER_PARAM_REQUIRED",
+              "position": 2,
+              "originalName": "listenOn"
+            }
+          },
+          "state": {
+            "enabled": true,
+            "editable": true,
+            "optional": true,
+            "advanced": false
+          }
+        },
+        "listenerConfigFallback": {
+          "key": "listenerConfigFallback",
+          "default": "{}",
+          "metadata": {
+            "label": "Listener Config",
+            "description": "Fallback empty value for the listener config record when no fields under it are set."
+          },
+          "source": {
+            "argument": {
+              "kind": "LISTENER_PARAM_REQUIRED",
+              "position": 1,
+              "originalName": "listenerConfig"
+            }
+          },
+          "state": {
+            "enabled": true,
+            "editable": false,
+            "optional": true,
+            "advanced": true,
+            "hidden": true
+          }
+        },
+        "webhookSecret": {
+          "key": "webhookSecret",
+          "placeholder": "",
+          "default": "",
+          "metadata": {
+            "label": "Signing Secret",
+            "description": "Signing secret of your Slack app, used to validate incoming Slack event requests"
+          },
+          "source": {
+            "argument": {
+              "kind": "LISTENER_PARAM_CONFIG_FIELD",
+              "originalName": "webhookSecret",
+              "position": 1
+            },
+            "path": "webhookSecret"
+          },
+          "state": {
+            "enabled": true,
+            "editable": true,
+            "optional": true,
+            "advanced": false
+          }
+        }
+      }
+    }
+  ],
+  "serviceTypes": [
+    {
+      "target": "$app",
+      "metadata": {
+        "label": "App",
+        "description": "Triggered when an event related to Slack app is received. Available actions: onAppMention, onAppUninstalled, onAppContextChanged, onAppDeleted, onAppHomeOpened, onAppInstalled, onAppRequested, and onAppUninstalledTeam."
+      },
+      "source": {
+        "construct": {
+          "kind": "SERVICE_TYPE_DESCRIPTOR"
+        },
+        "argument": {
+          "originalName": "AppService"
+        },
+        "module": {
+          "name": "slack"
+        }
+      },
+      "state": {
+        "enabled": false,
+        "editable": true
+      }
+    },
+    {
+      "target": "$channel",
+      "metadata": {
+        "label": "Channel",
+        "description": "Triggered when an event related to Slack channel is received. Available actions: onChannelArchive, onChannelCreated, onChannelDeleted, onChannelHistoryChanged, onChannelLeft, onChannelRename, onChannelIdChanged, onChannelShared, and onChannelUnshared."
+      },
+      "source": {
+        "construct": {
+          "kind": "SERVICE_TYPE_DESCRIPTOR"
+        },
+        "argument": {
+          "originalName": "ChannelService"
+        },
+        "module": {
+          "name": "slack"
+        }
+      },
+      "state": {
+        "enabled": false,
+        "editable": true
+      }
+    },
+    {
+      "target": "$dnd",
+      "metadata": {
+        "label": "Do Not Disturb",
+        "description": "Triggered when an event related to Slack do not disturb is received. Available actions: onDndUpdated and onDndUpdatedUser."
+      },
+      "source": {
+        "construct": {
+          "kind": "SERVICE_TYPE_DESCRIPTOR"
+        },
+        "argument": {
+          "originalName": "DndService"
+        },
+        "module": {
+          "name": "slack"
+        }
+      },
+      "state": {
+        "enabled": false,
+        "editable": true
+      }
+    },
+    {
+      "target": "$emailDomainChanged",
+      "metadata": {
+        "label": "Email Domain Changed",
+        "description": "Triggered when an event related to Slack email domain changed is received. Available actions: onEmailDomainChanged."
+      },
+      "source": {
+        "construct": {
+          "kind": "SERVICE_TYPE_DESCRIPTOR"
+        },
+        "argument": {
+          "originalName": "EmailDomainChangedService"
+        },
+        "module": {
+          "name": "slack"
+        }
+      },
+      "state": {
+        "enabled": false,
+        "editable": true
+      }
+    },
+    {
+      "target": "$emojiChanged",
+      "metadata": {
+        "label": "Emoji Changed",
+        "description": "Triggered when an event related to Slack emoji changed is received. Available actions: onEmojiChanged."
+      },
+      "source": {
+        "construct": {
+          "kind": "SERVICE_TYPE_DESCRIPTOR"
+        },
+        "argument": {
+          "originalName": "EmojiChangedService"
+        },
+        "module": {
+          "name": "slack"
+        }
+      },
+      "state": {
+        "enabled": false,
+        "editable": true
+      }
+    },
+    {
+      "target": "$file",
+      "metadata": {
+        "label": "File",
+        "description": "Triggered when an event related to Slack file is received. Available actions: onFileChange, onFileCommentDeleted, onFileCreated, onFileDeleted, onFilePublic, onFileShared, and onFileUnshared."
+      },
+      "source": {
+        "construct": {
+          "kind": "SERVICE_TYPE_DESCRIPTOR"
+        },
+        "argument": {
+          "originalName": "FileService"
+        },
+        "module": {
+          "name": "slack"
+        }
+      },
+      "state": {
+        "enabled": false,
+        "editable": true
+      }
+    },
+    {
+      "target": "$gridMigration",
+      "metadata": {
+        "label": "Grid Migration",
+        "description": "Triggered when an event related to Slack grid migration is received. Available actions: onGridMigrationFinished and onGridMigrationStarted."
+      },
+      "source": {
+        "construct": {
+          "kind": "SERVICE_TYPE_DESCRIPTOR"
+        },
+        "argument": {
+          "originalName": "GridMigrationService"
+        },
+        "module": {
+          "name": "slack"
+        }
+      },
+      "state": {
+        "enabled": false,
+        "editable": true
+      }
+    },
+    {
+      "target": "$group",
+      "metadata": {
+        "label": "Group",
+        "description": "Triggered when an event related to Slack group is received. Available actions: onGroupClose, onGroupHistoryChanged, onGroupLeft, onGroupOpen, onGroupRename, and onGroupDeleted."
+      },
+      "source": {
+        "construct": {
+          "kind": "SERVICE_TYPE_DESCRIPTOR"
+        },
+        "argument": {
+          "originalName": "GroupService"
+        },
+        "module": {
+          "name": "slack"
+        }
+      },
+      "state": {
+        "enabled": false,
+        "editable": true
+      }
+    },
+    {
+      "target": "$im",
+      "metadata": {
+        "label": "Direct Message",
+        "description": "Triggered when an event related to Slack direct message is received. Available actions: onImClose, onImCreated, onImHistoryChanged, and onImOpen."
+      },
+      "source": {
+        "construct": {
+          "kind": "SERVICE_TYPE_DESCRIPTOR"
+        },
+        "argument": {
+          "originalName": "ImService"
+        },
+        "module": {
+          "name": "slack"
+        }
+      },
+      "state": {
+        "enabled": false,
+        "editable": true
+      }
+    },
+    {
+      "target": "$linkShared",
+      "metadata": {
+        "label": "Link Shared",
+        "description": "Triggered when an event related to Slack link shared is received. Available actions: onLinkShared."
+      },
+      "source": {
+        "construct": {
+          "kind": "SERVICE_TYPE_DESCRIPTOR"
+        },
+        "argument": {
+          "originalName": "LinkSharedService"
+        },
+        "module": {
+          "name": "slack"
+        }
+      },
+      "state": {
+        "enabled": false,
+        "editable": true
+      }
+    },
+    {
+      "target": "$member",
+      "metadata": {
+        "label": "Member",
+        "description": "Triggered when an event related to Slack member is received. Available actions: onMemberJoinedChannel and onMemberLeftChannel."
+      },
+      "source": {
+        "construct": {
+          "kind": "SERVICE_TYPE_DESCRIPTOR"
+        },
+        "argument": {
+          "originalName": "MemberService"
+        },
+        "module": {
+          "name": "slack"
+        }
+      },
+      "state": {
+        "enabled": false,
+        "editable": true
+      }
+    },
+    {
+      "target": "$message",
+      "metadata": {
+        "label": "Message",
+        "description": "Triggered when an event related to Slack message is received. Available actions: onMessage, onMessageMetadataDeleted, onMessageMetadataPosted, and onMessageMetadataUpdated."
+      },
+      "source": {
+        "construct": {
+          "kind": "SERVICE_TYPE_DESCRIPTOR"
+        },
+        "argument": {
+          "originalName": "MessageService"
+        },
+        "module": {
+          "name": "slack"
+        }
+      },
+      "state": {
+        "enabled": true,
+        "editable": true
+      }
+    },
+    {
+      "target": "$pin",
+      "metadata": {
+        "label": "Pin",
+        "description": "Triggered when an event related to Slack pin is received. Available actions: onPinAdded and onPinRemoved."
+      },
+      "source": {
+        "construct": {
+          "kind": "SERVICE_TYPE_DESCRIPTOR"
+        },
+        "argument": {
+          "originalName": "PinService"
+        },
+        "module": {
+          "name": "slack"
+        }
+      },
+      "state": {
+        "enabled": false,
+        "editable": true
+      }
+    },
+    {
+      "target": "$reaction",
+      "metadata": {
+        "label": "Reaction",
+        "description": "Triggered when an event related to Slack reaction is received. Available actions: onReactionAdded and onReactionRemoved."
+      },
+      "source": {
+        "construct": {
+          "kind": "SERVICE_TYPE_DESCRIPTOR"
+        },
+        "argument": {
+          "originalName": "ReactionService"
+        },
+        "module": {
+          "name": "slack"
+        }
+      },
+      "state": {
+        "enabled": false,
+        "editable": true
+      }
+    },
+    {
+      "target": "$star",
+      "metadata": {
+        "label": "Star",
+        "description": "Triggered when an event related to Slack star is received. Available actions: onStarAdded and onStarRemoved."
+      },
+      "source": {
+        "construct": {
+          "kind": "SERVICE_TYPE_DESCRIPTOR"
+        },
+        "argument": {
+          "originalName": "StarService"
+        },
+        "module": {
+          "name": "slack"
+        }
+      },
+      "state": {
+        "enabled": false,
+        "editable": true
+      }
+    },
+    {
+      "target": "$subteam",
+      "metadata": {
+        "label": "User Group",
+        "description": "Triggered when an event related to Slack user group is received. Available actions: onSubteamCreated, onSubteamMembersChanged, onSubteamSelfAdded, onSubteamSelfRemoved, and onSubteamUpdated."
+      },
+      "source": {
+        "construct": {
+          "kind": "SERVICE_TYPE_DESCRIPTOR"
+        },
+        "argument": {
+          "originalName": "SubteamService"
+        },
+        "module": {
+          "name": "slack"
+        }
+      },
+      "state": {
+        "enabled": false,
+        "editable": true
+      }
+    },
+    {
+      "target": "$team",
+      "metadata": {
+        "label": "Team",
+        "description": "Triggered when an event related to Slack team is received. Available actions: onTeamDomainChange, onTeamJoin, onTeamRename, onTeamAccessGranted, and onTeamAccessRevoked."
+      },
+      "source": {
+        "construct": {
+          "kind": "SERVICE_TYPE_DESCRIPTOR"
+        },
+        "argument": {
+          "originalName": "TeamService"
+        },
+        "module": {
+          "name": "slack"
+        }
+      },
+      "state": {
+        "enabled": false,
+        "editable": true
+      }
+    },
+    {
+      "target": "$tokensRevoked",
+      "metadata": {
+        "label": "Tokens Revoked",
+        "description": "Triggered when an event related to Slack tokens revoked is received. Available actions: onTokensRevoked."
+      },
+      "source": {
+        "construct": {
+          "kind": "SERVICE_TYPE_DESCRIPTOR"
+        },
+        "argument": {
+          "originalName": "TokensRevokedService"
+        },
+        "module": {
+          "name": "slack"
+        }
+      },
+      "state": {
+        "enabled": false,
+        "editable": true
+      }
+    },
+    {
+      "target": "$userChange",
+      "metadata": {
+        "label": "User Change",
+        "description": "Triggered when an event related to Slack user change is received. Available actions: onUserChange."
+      },
+      "source": {
+        "construct": {
+          "kind": "SERVICE_TYPE_DESCRIPTOR"
+        },
+        "argument": {
+          "originalName": "UserChangeService"
+        },
+        "module": {
+          "name": "slack"
+        }
+      },
+      "state": {
+        "enabled": false,
+        "editable": true
+      }
+    },
+    {
+      "target": "$assistant",
+      "metadata": {
+        "label": "Assistant",
+        "description": "Triggered when an event related to Slack assistant is received. Available actions: onAssistantThreadContextChanged and onAssistantThreadStarted."
+      },
+      "source": {
+        "construct": {
+          "kind": "SERVICE_TYPE_DESCRIPTOR"
+        },
+        "argument": {
+          "originalName": "AssistantService"
+        },
+        "module": {
+          "name": "slack"
+        }
+      },
+      "state": {
+        "enabled": false,
+        "editable": true
+      }
+    },
+    {
+      "target": "$call",
+      "metadata": {
+        "label": "Call",
+        "description": "Triggered when an event related to Slack call is received. Available actions: onCallRejected."
+      },
+      "source": {
+        "construct": {
+          "kind": "SERVICE_TYPE_DESCRIPTOR"
+        },
+        "argument": {
+          "originalName": "CallService"
+        },
+        "module": {
+          "name": "slack"
+        }
+      },
+      "state": {
+        "enabled": false,
+        "editable": true
+      }
+    },
+    {
+      "target": "$entity",
+      "metadata": {
+        "label": "Entity",
+        "description": "Triggered when an event related to Slack entity is received. Available actions: onEntityCommentsRequested and onEntityDetailsRequested."
+      },
+      "source": {
+        "construct": {
+          "kind": "SERVICE_TYPE_DESCRIPTOR"
+        },
+        "argument": {
+          "originalName": "EntityService"
+        },
+        "module": {
+          "name": "slack"
+        }
+      },
+      "state": {
+        "enabled": false,
+        "editable": true
+      }
+    },
+    {
+      "target": "$function",
+      "metadata": {
+        "label": "Function",
+        "description": "Triggered when an event related to Slack function is received. Available actions: onFunctionExecuted."
+      },
+      "source": {
+        "construct": {
+          "kind": "SERVICE_TYPE_DESCRIPTOR"
+        },
+        "argument": {
+          "originalName": "FunctionService"
+        },
+        "module": {
+          "name": "slack"
+        }
+      },
+      "state": {
+        "enabled": false,
+        "editable": true
+      }
+    },
+    {
+      "target": "$invite",
+      "metadata": {
+        "label": "Invite",
+        "description": "Triggered when an event related to Slack invite is received. Available actions: onInviteRequested."
+      },
+      "source": {
+        "construct": {
+          "kind": "SERVICE_TYPE_DESCRIPTOR"
+        },
+        "argument": {
+          "originalName": "InviteService"
+        },
+        "module": {
+          "name": "slack"
+        }
+      },
+      "state": {
+        "enabled": false,
+        "editable": true
+      }
+    },
+    {
+      "target": "$sharedChannel",
+      "metadata": {
+        "label": "Shared Channel",
+        "description": "Triggered when an event related to Slack shared channel is received. Available actions: onSharedChannelInviteAccepted, onSharedChannelInviteApproved, onSharedChannelInviteDeclined, onSharedChannelInviteReceived, and onSharedChannelInviteRequested."
+      },
+      "source": {
+        "construct": {
+          "kind": "SERVICE_TYPE_DESCRIPTOR"
+        },
+        "argument": {
+          "originalName": "SharedChannelService"
+        },
+        "module": {
+          "name": "slack"
+        }
+      },
+      "state": {
+        "enabled": false,
+        "editable": true
+      }
+    },
+    {
+      "target": "$user",
+      "metadata": {
+        "label": "User",
+        "description": "Triggered when an event related to Slack user is received. Available actions: onUserHuddleChanged, onUserProfileChanged, onUserStatusChanged, onUserConnection, and onUserGuestStatusChanged."
+      },
+      "source": {
+        "construct": {
+          "kind": "SERVICE_TYPE_DESCRIPTOR"
+        },
+        "argument": {
+          "originalName": "UserService"
+        },
+        "module": {
+          "name": "slack"
+        }
+      },
+      "state": {
+        "enabled": false,
+        "editable": true
+      }
+    },
+    {
+      "target": "$agent",
+      "metadata": {
+        "label": "Agent",
+        "description": "Triggered when an event related to Slack agent is received. Available actions: onAgentSessionStopped and onAgentSessionTitleChanged."
+      },
+      "source": {
+        "construct": {
+          "kind": "SERVICE_TYPE_DESCRIPTOR"
+        },
+        "argument": {
+          "originalName": "AgentService"
+        },
+        "module": {
+          "name": "slack"
+        }
+      },
+      "state": {
+        "enabled": false,
+        "editable": true
+      }
+    }
+  ],
+  "artifactInfo": {
+    "displayLabel": "Slack Event Integration",
+    "icon": {
+      "lightPath": "icons/light.svg",
+      "darkPath": "icons/dark.svg"
+    }
+  }
+}
